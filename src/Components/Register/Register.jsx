@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { useState } from "react";
 import { IoIosEye } from "react-icons/io";
@@ -14,6 +18,7 @@ const Register = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const accepted = e.target.terms.checked;
+    const name = e.target.name.value;
 
     if (password.length < 6) {
       setRegisterError("Password must be at least 6 characters or longer");
@@ -29,11 +34,24 @@ const Register = () => {
     setRegisterError("");
     setRegisterSuccess("");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => setRegisterSuccess("User Created Successfully"))
-      .catch((error) => {
-        setRegisterError(error.message);
-      });
+    createUserWithEmailAndPassword(auth, email, password).then((result) => {
+      setRegisterSuccess("User Created Successfully");
+      updateProfile(result.user, name)
+        .then(() => {
+          console.log("Profile updated");
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+
+      sendEmailVerification(result.user)
+        .then(() => {
+          alert("Please check your email and verify your account");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    });
   };
   return (
     <div className="border">
@@ -42,11 +60,21 @@ const Register = () => {
         <form onSubmit={handleRegister}>
           <input
             className="w-full py-2 px-2 border"
+            type="name"
+            name="name"
+            placeholder="Your name"
+            required
+          />
+          <br />
+          <input
+            className="w-full py-2 px-2 border"
             type="email"
             name="email"
             placeholder="Your Email"
             required
           />
+          <br />
+
           <br />
           <div className="mb-4 relative border">
             <input

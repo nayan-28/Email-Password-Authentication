@@ -39,7 +39,11 @@ const Login = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
-        setLoginSuccess("Successfully logged in");
+        if (result.user.emailVerified) {
+          setLoginSuccess("Successfully logged in");
+        } else {
+          setLoginError("Please Verify your account");
+        }
       })
       .catch((error) => {
         setLoginError(error.message);
