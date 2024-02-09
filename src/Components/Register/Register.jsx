@@ -1,9 +1,13 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { useState } from "react";
+import { IoIosEye } from "react-icons/io";
+import { IoEyeOff } from "react-icons/io5";
 const Register = () => {
   const [registerError, setRegisterError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -11,6 +15,9 @@ const Register = () => {
 
     if (password.length < 6) {
       setRegisterError("Password must be at least 6 characters or longer");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      setRegisterError("Please Use any Upper Case Character");
       return;
     }
 
@@ -36,13 +43,22 @@ const Register = () => {
             required
           />
           <br />
-          <input
-            className="mb-4 w-3/4 border rounded  px-2 py-3"
-            type="password"
-            name="password"
-            placeholder="Your Password"
-            required
-          />
+          <div className="flex">
+            <input
+              className="mb-4 w-3/4 border rounded  px-2 py-3"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Your Password"
+              required
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-3xl mb-4 text-blue-500"
+            >
+              {showPassword ? <IoIosEye></IoIosEye> : <IoEyeOff></IoEyeOff>}
+            </span>
+          </div>
+
           <input
             className="btn btn-primary mb-4 w-3/4 hover:bg-blue-600"
             value="Register"

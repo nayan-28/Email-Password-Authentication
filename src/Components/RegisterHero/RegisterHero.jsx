@@ -1,16 +1,21 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { useState } from "react";
-
+import { IoIosEye } from "react-icons/io";
+import { IoEyeOff } from "react-icons/io5";
 const RegisterHero = () => {
   const [registerError, setRegisterError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
     if (password.length < 6) {
       setRegisterError("Password must be at least 6 characters or longer");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      setRegisterError("Please Use any Upper Case Character");
       return;
     }
 
@@ -47,13 +52,21 @@ const RegisterHero = () => {
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input
-                type="password"
-                placeholder="password"
-                className="input input-bordered"
-                required
-                name="password"
-              />
+              <div className="flex">
+                <input
+                  type="password"
+                  placeholder="password"
+                  className="input input-bordered"
+                  required
+                  name="password"
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-3xl mt-2 px-2 text-blue-500"
+                >
+                  {showPassword ? <IoIosEye></IoIosEye> : <IoEyeOff></IoEyeOff>}
+                </span>
+              </div>
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
@@ -61,7 +74,7 @@ const RegisterHero = () => {
               </label>
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary">Login</button>
+              <button className="btn btn-primary">Register</button>
             </div>
           </form>
           {registerError && <p className="text-red-700">{registerError}</p>}
