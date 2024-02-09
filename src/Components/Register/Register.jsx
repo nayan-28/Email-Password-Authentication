@@ -1,15 +1,26 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
+import { useState } from "react";
 const Register = () => {
+  const [registerError, setRegisterError] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
+    if (password.length < 6) {
+      setRegisterError("Password must be at least 6 characters or longer");
+      return;
+    }
+
+    setRegisterError("");
+    setRegisterSuccess("");
+
     createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => console.log(result.user))
+      .then((result) => setRegisterSuccess("User Created Successfully"))
       .catch((error) => {
-        console.error(error);
+        setRegisterError(error.message);
       });
   };
   return (
@@ -22,6 +33,7 @@ const Register = () => {
             type="email"
             name="email"
             placeholder="Your Email"
+            required
           />
           <br />
           <input
@@ -29,6 +41,7 @@ const Register = () => {
             type="password"
             name="password"
             placeholder="Your Password"
+            required
           />
           <input
             className="btn btn-primary mb-4 w-3/4 hover:bg-blue-600"
@@ -36,6 +49,8 @@ const Register = () => {
             type="submit"
           ></input>
         </form>
+        {registerError && <p className="text-red-700">{registerError}</p>}
+        {registerSuccess && <p className="text-green-700">{registerSuccess}</p>}
       </div>
     </div>
   );
