@@ -3,6 +3,7 @@ import auth from "../../firebase/firebase.config";
 import { useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoEyeOff } from "react-icons/io5";
+import { NavLink } from "react-router-dom";
 const RegisterHero = () => {
   const [registerError, setRegisterError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
@@ -43,7 +44,7 @@ const RegisterHero = () => {
               <input
                 type="email"
                 placeholder="email"
-                className="input input-bordered"
+                className="input input-bordered w-full py-2 px-2 border"
                 required
                 name="email"
               />
@@ -52,17 +53,17 @@ const RegisterHero = () => {
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
-              <div className="flex">
+              <div className="mb-4 relative border">
                 <input
                   type="password"
                   placeholder="password"
-                  className="input input-bordered"
+                  className="input input-bordered w-full py-2 px-2 border"
                   required
                   name="password"
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-3xl mt-2 px-2 text-blue-500"
+                  className="absolute top-3 right-2 text-2xl"
                 >
                   {showPassword ? <IoIosEye></IoIosEye> : <IoEyeOff></IoEyeOff>}
                 </span>
@@ -77,10 +78,17 @@ const RegisterHero = () => {
               <button className="btn btn-primary">Register</button>
             </div>
           </form>
+
           {registerError && <p className="text-red-700">{registerError}</p>}
           {registerSuccess && (
             <p className="text-green-700">{registerSuccess}</p>
           )}
+          <div>
+            <p className="mb-4 px-2">
+              Already have an account?{" "}
+              <NavLink to="/login">Please Login</NavLink>
+            </p>
+          </div>
         </div>
       </div>
     </div>

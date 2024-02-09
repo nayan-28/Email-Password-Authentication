@@ -1,10 +1,33 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import auth from "../../firebase/firebase.config";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState("");
   const [loginError, setLoginError] = useState("");
+  const emailRef = useRef(null);
+  const [resetEmail, setResetEmail] = useState("");
+  const handleForgetPassword = () => {
+    const email = emailRef.current.value;
+    if (!email) {
+      console.log("Please Write your email");
+      return;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log("Please write your email correctly");
+      return;
+    } else {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          setResetEmail("Please Check your email");
+        })
+        .catch((error) => console.log(error));
+    }
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -12,6 +35,7 @@ const Login = () => {
 
     setLoginError("");
     setLoginSuccess("");
+    setResetEmail("");
 
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
@@ -41,6 +65,7 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
+                ref={emailRef}
                 placeholder="email"
                 className="input input-bordered"
                 required
@@ -58,9 +83,12 @@ const Login = () => {
                 name="password"
               />
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
+                <NavLink
+                  onClick={handleForgetPassword}
+                  className="label-text-alt link link-hover"
+                >
                   Forgot password?
-                </a>
+                </NavLink>
               </label>
             </div>
             <div className="form-control mt-6">
@@ -69,6 +97,13 @@ const Login = () => {
           </form>
           {loginSuccess && <p className="text-green-600">{loginSuccess}</p>}
           {loginError && <p className="text-red-600">{loginError}</p>}
+          {resetEmail && <p className="text-green-600">{resetEmail}</p>}
+          <div>
+            <p className="mb-4 px-2">
+              New to this website?{" "}
+              <NavLink to="/register">Register Now</NavLink>
+            </p>
+          </div>
         </div>
       </div>
     </div>

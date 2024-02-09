@@ -3,6 +3,7 @@ import auth from "../../firebase/firebase.config";
 import { useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoEyeOff } from "react-icons/io5";
+import { NavLink } from "react-router-dom";
 const Register = () => {
   const [registerError, setRegisterError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
@@ -40,16 +41,16 @@ const Register = () => {
         <h2 className="text-3xl">Please Register</h2>
         <form onSubmit={handleRegister}>
           <input
-            className="mb-4 w-3/4 border rounded px-2 py-3"
+            className="w-full py-2 px-2 border"
             type="email"
             name="email"
             placeholder="Your Email"
             required
           />
           <br />
-          <div className="flex">
+          <div className="mb-4 relative border">
             <input
-              className="mb-4 w-3/4 border rounded  px-2 py-3"
+              className="w-full py-2 px-2 border"
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Your Password"
@@ -57,7 +58,7 @@ const Register = () => {
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="text-3xl mb-4 text-blue-500"
+              className="absolute top-3 right-2 text-2xl"
             >
               {showPassword ? <IoIosEye></IoIosEye> : <IoEyeOff></IoEyeOff>}
             </span>
@@ -77,6 +78,11 @@ const Register = () => {
         </form>
         {registerError && <p className="text-red-700">{registerError}</p>}
         {registerSuccess && <p className="text-green-700">{registerSuccess}</p>}
+        <div>
+          <p className="mb-4 px-2">
+            Already have an account? <NavLink to="/login">Please Login</NavLink>
+          </p>
+        </div>
       </div>
     </div>
   );
