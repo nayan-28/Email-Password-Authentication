@@ -12,12 +12,16 @@ const Register = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const accepted = e.target.terms.checked;
 
     if (password.length < 6) {
       setRegisterError("Password must be at least 6 characters or longer");
       return;
     } else if (!/[A-Z]/.test(password)) {
       setRegisterError("Please Use any Upper Case Character");
+      return;
+    } else if (!accepted) {
+      setRegisterError("Please accept our terms & condition");
       return;
     }
 
@@ -58,7 +62,13 @@ const Register = () => {
               {showPassword ? <IoIosEye></IoIosEye> : <IoEyeOff></IoEyeOff>}
             </span>
           </div>
-
+          <br />
+          <div className="mb-2">
+            <input type="checkbox" name="terms" id="terms" />
+            <label className="ml-2" htmlFor="terms">
+              Accept our terms and condition
+            </label>
+          </div>
           <input
             className="btn btn-primary mb-4 w-3/4 hover:bg-blue-600"
             value="Register"
